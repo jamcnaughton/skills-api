@@ -1,0 +1,22 @@
+version: "3.3"
+services:
+  skills-db:
+    image: postgres:15
+    container_name: skills-db
+    hostname: skills-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: skills
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      TZ: 'GMT'
+      PGTZ: 'GMT'
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready", "-d", "db_prod" ]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+    ports:
+      - "8800:5432"
+    volumes:
+      - ./docker_postgres_init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
