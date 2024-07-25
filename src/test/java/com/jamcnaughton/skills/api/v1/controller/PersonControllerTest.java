@@ -1,5 +1,7 @@
 package com.jamcnaughton.skills.api.v1.controller;
 
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -57,6 +59,20 @@ class PersonControllerTest {
   void testUpdate() {
     personController.update(1L, "test1@dummy.com", "Forenames-1", "Surnames-1");
     verify(personService, times(1)).update(1L, "test1@dummy.com", "Forenames-1", "Surnames-1");
+  }
+
+  /** Test update controller endpoint when no parameters are supplied. */
+  @Test
+  @DisplayName("Update - no parameters")
+  void testUpdateNoParameters() {
+    Exception exception =
+            assertThrows(
+                    IllegalArgumentException.class,
+                    () -> {
+                      personController.update(1L, null, null, null);
+                    });
+    String actualMessage = exception.getMessage();
+    assertTrue(actualMessage.contains("No email, forenames or surname parameters supplied."));
   }
 
   /** Test delete controller endpoint. */

@@ -1,5 +1,7 @@
 package com.jamcnaughton.skills.api.v1.controller;
 
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -57,6 +59,20 @@ class SkillLevelControllerTest {
   void testUpdate() {
     skillLevelController.update(1L, 1L, "Description-1");
     verify(skillLevelService, times(1)).update(1L, 1L, "Description-1");
+  }
+
+  /** Test update controller endpoint when no parameters are supplied. */
+  @Test
+  @DisplayName("Update - no parameters")
+  void testUpdateNoParameters() {
+    Exception exception =
+            assertThrows(
+                    IllegalArgumentException.class,
+                    () -> {
+                      skillLevelController.update(1L, null, null);
+                    });
+    String actualMessage = exception.getMessage();
+    assertTrue(actualMessage.contains("No order or description parameters supplied."));
   }
 
   /** Test delete controller endpoint. */

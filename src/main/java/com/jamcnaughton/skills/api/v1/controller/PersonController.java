@@ -105,6 +105,9 @@ public class PersonController {
       @Parameter(description = "${param.forenames}") @RequestParam(required = false)
           String forenames,
       @Parameter(description = "${param.surname}") @RequestParam(required = false) String surname) {
+    if (email == null && forenames == null && surname == null) {
+      throw new IllegalArgumentException("No email, forenames or surname parameters supplied.");
+    }
     PersonDto response = personService.update(personId, email, forenames, surname);
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }

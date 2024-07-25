@@ -104,6 +104,9 @@ public class SkillLevelController {
           Long order,
       @Parameter(description = "${param.skill-level-description}") @RequestParam(required = false)
           String description) {
+    if (order == null && description == null) {
+      throw new IllegalArgumentException("No order or description parameters supplied.");
+    }
     SkillLevelDto response = skillLevelService.update(skillLevelId, order, description);
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
