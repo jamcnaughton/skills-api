@@ -25,6 +25,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 
 /** Skill service tests. */
 @DisplayName("Skill Service")
@@ -55,8 +60,9 @@ public class SkillServiceTest {
               .skillOwnerships(skillOwnerships)
               .build());
     }
+    Page<Skill> pagedSkills = new PageImpl<>(skills);
     when(skillRepository.findById(any())).thenReturn(Optional.ofNullable(skills.get(0)));
-    when(skillRepository.findAll()).thenReturn(skills);
+    when(skillRepository.findAll(any(Pageable.class))).thenReturn(pagedSkills);
     when(skillRepository.save(any()))
         .thenAnswer(invocation -> invocation.getArgument(0, Skill.class));
     when(skillRepository.informativeDelete(1L)).thenReturn(1);
@@ -90,8 +96,9 @@ public class SkillServiceTest {
   @Test
   @DisplayName("Get all")
   void testGetAll() {
-    List<SkillDto> result = skillService.getAll();
-    assertEquals(10, result.size());
+    Pageable pageable = PageRequest.of(0, 10);
+    PagedModel<SkillDto> result = skillService.getAll(pageable);
+    assertEquals(10, result.getContent().size());
   }
 
   /** Test create service method. */

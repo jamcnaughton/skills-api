@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -53,14 +55,20 @@ public class SkillOwnershipController {
   /**
    * The end-point for getting all skill ownership.
    *
+   * @param pageable The object that enables pagination.
    * @return A response containing all skill ownerships.
    */
-  @Operation(description = "${skill-ownership.get-all}")
+  @Operation(
+      description = "${skill-ownership.get-all}",
+      parameters = {
+        @Parameter(name = "page", description = "${param.page}", example = "0"),
+        @Parameter(name = "size", description = "${param.size}", example = "10")
+      })
   @ApiResponse(description = "${response.skill-ownerships}")
   @GetMapping
-  public ResponseEntity<List<SkillOwnershipDto>> getAll() {
-    List<SkillOwnershipDto> response = skillOwnershipService.getAll();
-    return ResponseEntity.status(HttpStatus.OK).body(response);
+  public ResponseEntity<PagedModel<SkillOwnershipDto>> getAll(
+      @Parameter(hidden = true) final Pageable pageable) {
+    return ResponseEntity.status(HttpStatus.OK).body(skillOwnershipService.getAll(pageable));
   }
 
   /**
@@ -97,8 +105,7 @@ public class SkillOwnershipController {
       @Parameter(description = "${param.person-id}") @PathVariable long personId,
       @Parameter(description = "${param.skill-id}") @PathVariable long skillId,
       @Parameter(description = "${param.skill-level-id}") @RequestParam long skillLevelId) {
-    SkillOwnershipDto response =
-        skillOwnershipService.update(personId, skillId, skillLevelId);
+    SkillOwnershipDto response = skillOwnershipService.update(personId, skillId, skillLevelId);
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
@@ -113,8 +120,8 @@ public class SkillOwnershipController {
   @ApiResponse(description = "${response.delete}")
   @DeleteMapping("/{personId}/{skillId}")
   public ResponseEntity<String> delete(
-          @Parameter(description = "${param.person-id}") @PathVariable long personId,
-          @Parameter(description = "${param.skill-id}") @PathVariable long skillId) {
+      @Parameter(description = "${param.person-id}") @PathVariable long personId,
+      @Parameter(description = "${param.skill-id}") @PathVariable long skillId) {
     skillOwnershipService.delete(personId, skillId);
     return ResponseEntity.status(HttpStatus.OK)
         .body("Skill ownership deletion request successfully processed.");

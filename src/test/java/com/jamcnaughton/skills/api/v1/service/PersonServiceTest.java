@@ -16,7 +16,6 @@ import com.jamcnaughton.skills.model.entity.Skill;
 import com.jamcnaughton.skills.model.entity.SkillLevel;
 import com.jamcnaughton.skills.model.entity.SkillOwnership;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
@@ -25,6 +24,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 
 /** Person service tests. */
 @DisplayName("Person Service")
@@ -56,8 +60,9 @@ public class PersonServiceTest {
               .skillOwnerships(skillOwnerships)
               .build());
     }
+    Page<Person> pagedPersons = new PageImpl<>(persons);
     when(personRepository.findById(any())).thenReturn(Optional.ofNullable(persons.get(0)));
-    when(personRepository.findAll()).thenReturn(persons);
+    when(personRepository.findAll(any(Pageable.class))).thenReturn(pagedPersons);
     when(personRepository.save(any()))
         .thenAnswer(invocation -> invocation.getArgument(0, Person.class));
     when(personRepository.informativeDelete(1L)).thenReturn(1);
@@ -91,8 +96,9 @@ public class PersonServiceTest {
   @Test
   @DisplayName("Get all")
   void testGetAll() {
-    List<PersonDto> result = personService.getAll();
-    assertEquals(10, result.size());
+    Pageable pageable = PageRequest.of(0, 10);
+    PagedModel<PersonDto> result = personService.getAll(pageable);
+    assertEquals(10, result.getContent().size());
   }
 
   /** Test create service method. */

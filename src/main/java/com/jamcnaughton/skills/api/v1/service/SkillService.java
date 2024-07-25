@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Service;
 
 /** Service for skills. */
@@ -36,12 +38,11 @@ public class SkillService {
   /**
    * Get all skills.
    *
+   * @param pageable The object that enables pagination
    * @return All skills.
    */
-  public List<SkillDto> getAll() {
-    return skillRepository.findAll().stream()
-        .map(person -> convertToDto(person))
-        .collect(Collectors.toList());
+  public PagedModel<SkillDto> getAll(final Pageable pageable) {
+    return new PagedModel<>(skillRepository.findAll(pageable).map(person -> convertToDto(person)));
   }
 
   /**
