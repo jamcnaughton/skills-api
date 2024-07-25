@@ -4,12 +4,12 @@ import com.jamcnaughton.skills.api.v1.model.SkillLevelDto;
 import com.jamcnaughton.skills.api.v1.repository.SkillLevelRepository;
 import com.jamcnaughton.skills.model.entity.SkillLevel;
 import com.jamcnaughton.skills.model.entity.SkillOwnership;
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Service;
 
 /** Service for skill levels. */
@@ -36,12 +36,12 @@ public class SkillLevelService {
   /**
    * Get all skill levels.
    *
+   * @param pageable The object that enables pagination
    * @return All skill levels.
    */
-  public List<SkillLevelDto> getAll() {
-    return skillLevelRepository.findAll().stream()
-        .map(skillLevel -> convertToDto(skillLevel))
-        .collect(Collectors.toList());
+  public PagedModel<SkillLevelDto> getAll(final Pageable pageable) {
+    return new PagedModel<>(skillLevelRepository.findAll(pageable)
+        .map(skillLevel -> convertToDto(skillLevel)));
   }
 
   /**

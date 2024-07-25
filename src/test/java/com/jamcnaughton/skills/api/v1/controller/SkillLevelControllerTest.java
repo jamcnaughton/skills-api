@@ -39,8 +39,8 @@ class SkillLevelControllerTest {
   @Test
   @DisplayName("Get all")
   void testGetAll() {
-    skillLevelController.getAll();
-    verify(skillLevelService, times(1)).getAll();
+    skillLevelController.getAll(null);
+    verify(skillLevelService, times(1)).getAll(null);
   }
 
   /** Test create controller endpoint. */

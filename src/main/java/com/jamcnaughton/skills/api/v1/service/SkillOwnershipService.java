@@ -5,12 +5,12 @@ import com.jamcnaughton.skills.api.v1.repository.SkillOwnershipRepository;
 import com.jamcnaughton.skills.model.entity.SkillOwnership;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,12 +42,12 @@ public class SkillOwnershipService {
   /**
    * Get all skillOwnerships.
    *
+   * @param pageable The object that enables pagination
    * @return All skillOwnerships.
    */
-  public List<SkillOwnershipDto> getAll() {
-    return skillOwnershipRepository.findAll().stream()
-        .map(skillOwnership -> convertToDto(skillOwnership))
-        .collect(Collectors.toList());
+  public PagedModel<SkillOwnershipDto> getAll(final Pageable pageable) {
+    return new PagedModel<>(skillOwnershipRepository.findAll(pageable)
+        .map(skillOwnership -> convertToDto(skillOwnership)));
   }
 
   /**

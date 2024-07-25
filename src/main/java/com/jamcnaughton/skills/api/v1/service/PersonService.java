@@ -4,12 +4,12 @@ import com.jamcnaughton.skills.api.v1.model.PersonDto;
 import com.jamcnaughton.skills.api.v1.repository.PersonRepository;
 import com.jamcnaughton.skills.model.entity.Person;
 import com.jamcnaughton.skills.model.entity.SkillOwnership;
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Service;
 
 /** Service for persons. */
@@ -36,12 +36,12 @@ public class PersonService {
   /**
    * Get all persons.
    *
+   * @param pageable The object that enables pagination
    * @return All persons.
    */
-  public List<PersonDto> getAll() {
-    return personRepository.findAll().stream()
-        .map(person -> convertToDto(person))
-        .collect(Collectors.toList());
+  public PagedModel<PersonDto> getAll(final Pageable pageable) {
+    return new PagedModel<>(personRepository.findAll(pageable)
+        .map(person -> convertToDto(person)));
   }
 
   /**

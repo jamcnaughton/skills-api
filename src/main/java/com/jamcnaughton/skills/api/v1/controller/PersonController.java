@@ -6,9 +6,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -51,14 +52,20 @@ public class PersonController {
   /**
    * The end-point for getting all persons.
    *
+   * @param pageable The object that enables pagination.
    * @return A response containing all persons.
    */
-  @Operation(description = "${person.get-all}")
+  @Operation(
+      description = "${person.get-all}",
+      parameters = {
+        @Parameter(name = "page", description = "${param.page}", example = "0"),
+        @Parameter(name = "size", description = "${param.size}", example = "10")
+      })
   @ApiResponse(description = "${response.persons}")
   @GetMapping
-  public ResponseEntity<List<PersonDto>> getAll() {
-    List<PersonDto> response = personService.getAll();
-    return ResponseEntity.status(HttpStatus.OK).body(response);
+  public ResponseEntity<PagedModel<PersonDto>> getAll(
+      @Parameter(hidden = true) final Pageable pageable) {
+    return ResponseEntity.status(HttpStatus.OK).body(personService.getAll(pageable));
   }
 
   /**
@@ -94,12 +101,10 @@ public class PersonController {
   @PutMapping("/{personId}")
   public ResponseEntity<PersonDto> update(
       @Parameter(description = "${param.person-id}") @PathVariable long personId,
-      @Parameter(description = "${param.email}") @RequestParam(required = false)
-          String email,
+      @Parameter(description = "${param.email}") @RequestParam(required = false) String email,
       @Parameter(description = "${param.forenames}") @RequestParam(required = false)
           String forenames,
-      @Parameter(description = "${param.surname}") @RequestParam(required = false)
-          String surname) {
+      @Parameter(description = "${param.surname}") @RequestParam(required = false) String surname) {
     PersonDto response = personService.update(personId, email, forenames, surname);
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }

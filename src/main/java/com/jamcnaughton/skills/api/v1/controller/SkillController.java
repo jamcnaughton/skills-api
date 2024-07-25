@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -51,14 +53,20 @@ public class SkillController {
   /**
    * The end-point for getting all skills.
    *
+   * @param pageable The object that enables pagination.
    * @return A response containing all skills.
    */
-  @Operation(description = "${skill.get-all}")
+  @Operation(
+      description = "${skill.get-all}",
+      parameters = {
+        @Parameter(name = "page", description = "${param.page}", example = "0"),
+        @Parameter(name = "size", description = "${param.size}", example = "10")
+      })
   @ApiResponse(description = "${response.skills}")
   @GetMapping
-  public ResponseEntity<List<SkillDto>> getAll() {
-    List<SkillDto> response = skillService.getAll();
-    return ResponseEntity.status(HttpStatus.OK).body(response);
+  public ResponseEntity<PagedModel<SkillDto>> getAll(
+      @Parameter(hidden = true) final Pageable pageable) {
+    return ResponseEntity.status(HttpStatus.OK).body(skillService.getAll(pageable));
   }
 
   /**

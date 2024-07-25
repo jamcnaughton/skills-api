@@ -39,8 +39,8 @@ class SkillOwnershipControllerTest {
   @Test
   @DisplayName("Get all")
   void testGetAll() {
-    skillOwnershipController.getAll();
-    verify(skillOwnershipService, times(1)).getAll();
+    skillOwnershipController.getAll(null);
+    verify(skillOwnershipService, times(1)).getAll(null);
   }
 
   /** Test create controller endpoint. */

@@ -39,8 +39,8 @@ class PersonControllerTest {
   @Test
   @DisplayName("Get all")
   void testGetAll() {
-    personController.getAll();
-    verify(personService, times(1)).getAll();
+    personController.getAll(null);
+    verify(personService, times(1)).getAll(null);
   }
 
   /** Test create controller endpoint. */
