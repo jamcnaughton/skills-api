@@ -9,7 +9,7 @@ database it utilises.
 
 Before running the Skills API you will need at least the following:
 
-* Java ([jdk-17.0.5](https://download.oracle.com/java/17/archive/jdk-17.0.5_windows-x64_bin.zip))
+* Java ([jdk-21.0.4](https://download.oracle.com/java/21/archive/jdk-21.0.4_windows-x64_bin.zip))
 * Maven
 * Docker Desktop
 
@@ -34,3 +34,12 @@ Once set up, if no properties are changed from the defaults, the API will be ava
 here: `http://localhost:8801/skills/api/`
 
 The API Docs will be available while the API runs here: `http://localhost:8801/skills/api/swagger-ui/index.html`
+
+## Roadmap
+
+There are features in this API which would ideally be present but have been left out due to time constraints or for practicality. 
+If development on this API were to be continued these extra features would be implemented:
+  - Authentication (likely with OAuth2).
+  - Using Spring Boot for the docker containers.
+  - Abstract controllers, repositories and possibly services to reduce code duplication.
+  - Further validation on supplied parameters (such as an e-mail validation check and more informative error responses).
