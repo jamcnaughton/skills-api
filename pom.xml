@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.6</version>
+        <version>3.3.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.jamcnaughton.skills</groupId>
@@ -15,21 +15,15 @@
     <name>skills-api</name>
     <description>Provides an API for accessing the Skills database.</description>
     <properties>
-        <java.version>17</java.version>
+        <java.version>21</java.version>
         <surefire.version>3.2.1</surefire.version>
-        <postgresql.version>42.4.3</postgresql.version>
+        <postgresql.version>42.7.2</postgresql.version>
+        <liquibase.version>4.15.0</liquibase.version>
         <springdoc-openapi.version>2.2.0</springdoc-openapi.version>
         <jakarta.persistence-api.version>3.1.0</jakarta.persistence-api.version>
         <modelmapper.version>2.3.5</modelmapper.version>
-        <dispatcher.version>5.3.2.00007</dispatcher.version>
-        <jasypt.version>1.9.3</jasypt.version>
-        <log4j.version>1.2.17</log4j.version>
-        <open-csv.version>5.7.1</open-csv.version>
-        <rider-cdi.version>1.32.2</rider-cdi.version>
-        <rider-cucumber.version>1.32.2</rider-cucumber.version>
-        <rider-junit5.version>1.32.2</rider-junit5.version>
-        <rider-spring.version>1.32.2</rider-spring.version>
-        <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
+        <rider.version>1.42.0</rider.version>
+        <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.4.0</maven-checkstyle-plugin.version>
         <checkstyle.version>10.9.1</checkstyle.version>
         <acceptable-code-coverage>1</acceptable-code-coverage>
@@ -89,25 +83,25 @@
         <dependency>
             <groupId>com.github.database-rider</groupId>
             <artifactId>rider-cdi</artifactId>
-            <version>${rider-cdi.version}</version>
+            <version>${rider.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.github.database-rider</groupId>
             <artifactId>rider-spring</artifactId>
-            <version>${rider-spring.version}</version>
+            <version>${rider.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.github.database-rider</groupId>
             <artifactId>rider-cucumber</artifactId>
-            <version>${rider-cucumber.version}</version>
+            <version>${rider.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.github.database-rider</groupId>
             <artifactId>rider-junit5</artifactId>
-            <version>${rider-junit5.version}</version>
+            <version>${rider.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -135,7 +129,7 @@
             <plugin>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-maven-plugin</artifactId>
-                <version>4.15.0</version>
+                <version>${liquibase.version}</version>
                 <configuration>
                     <propertyFileWillOverride>true</propertyFileWillOverride>
                     <propertyFile>liquibase.properties</propertyFile>
@@ -229,15 +223,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-
-            <!-- Test config -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <forkedProcessExitTimeoutInSeconds>120</forkedProcessExitTimeoutInSeconds>
-                </configuration>
             </plugin>
 
         </plugins>

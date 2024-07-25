@@ -9,7 +9,7 @@ database it utilises.
 
 Before running the Skills API you will need at least the following:
 
-* Java ([jdk-17.0.5](https://download.oracle.com/java/17/archive/jdk-17.0.5_windows-x64_bin.zip))
+* Java ([jdk-21.0.4](https://download.oracle.com/java/21/archive/jdk-21.0.4_windows-x64_bin.zip))
 * Maven
 * Docker Desktop
 
